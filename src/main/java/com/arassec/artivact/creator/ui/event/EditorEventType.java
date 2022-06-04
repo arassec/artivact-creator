@@ -1,0 +1,30 @@
+package com.arassec.artivact.creator.ui.event;
+
+public enum EditorEventType {
+
+    IMAGE_SET_OVERVIEW_SELECTED,
+
+    IMAGE_SET_SELECTED,
+
+    MODEL_OVERVIEW_SELECTED,
+
+    MODEL_SELECTED,
+
+    REMOVE_BACKGROUND,
+
+    TOGGLE_MODEL_INPUT,
+
+    DELETE_IMAGE_SET,
+
+    EDIT_MODEL,
+
+    DELETE_MODEL,
+
+    UPDATE_EDITOR_TREE,
+
+    UPDATE_EDITOR_TREE_AND_SELECT_IMAGE_SET_OVERVIEW,
+
+    UPDATE_MODEL_CONTENT,
+
+    UPDATE_NOTES,
+}

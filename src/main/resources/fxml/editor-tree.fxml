@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.arassec.artivact.creator.ui.model.EditorTree?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.arassec.artivact.creator.ui.controller.EditorTreeController"
+            fx:id="editorTreeContainer" minWidth="200" prefWidth="200">
+    <children>
+        <EditorTree fx:id="editorTree" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0"
+                    AnchorPane.topAnchor="0.0"/>
+    </children>
+</AnchorPane>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.*?>
+
+<?import com.arassec.artivact.creator.ui.model.EditorTree?>
+<AnchorPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.arassec.artivact.creator.ui.controller.EditorController">
+    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <children>
+            <ToolBar>
+                <items>
+                    <Button fx:id="backButton" mnemonicParsing="false" text="%editor.toolbar.back.button.text">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-arrow-left" iconSize="16"/>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="%editor.toolbar.back.button.tooltip"/>
+                        </tooltip>
+                    </Button>
+                    <Separator />
+                    <Button mnemonicParsing="false" onAction="#addImages" text="%editor.toolbar.add-images.button.text">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-file-import" iconSize="16"/>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="%editor.toolbar.add-images.button.tooltip"/>
+                        </tooltip>
+                    </Button>
+                    <Button mnemonicParsing="false" onAction="#captureImage" text="%editor.toolbar.capture-image.button.text">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-image" iconSize="16"/>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="%editor.toolbar.capture-image.button.tooltip"/>
+                        </tooltip>
+                    </Button>
+                    <Button mnemonicParsing="false" onAction="#captureImages" text="%editor.toolbar.capture-images.button.text">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-images" iconSize="16"/>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="%editor.toolbar.capture-images.button.tooltip"/>
+                        </tooltip>
+                    </Button>
+                    <Separator/>
+                    <Button fx:id="createModelButton" mnemonicParsing="false" onAction="#createModel" text="%editor.toolbar.create-model.button.text">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-cube" iconSize="16"/>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="%editor.toolbar.create-model.button.tooltip"/>
+                        </tooltip>
+                    </Button>
+                    <Pane fx:id="spacer"/>
+                    <Button fx:id="uploadButton" mnemonicParsing="false" onAction="#upload" text="%editor.toolbar.upload-files.button.text">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-upload" iconSize="16"/>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="%editor.toolbar.upload-files.button.tooltip"/>
+                        </tooltip>
+                    </Button>
+                </items>
+            </ToolBar>
+            <fx:include source="editor-notes.fxml"/>
+            <SplitPane fx:id="contentSplitPane" dividerPositions="0.1">
+                <items>
+                    <fx:include source="editor-tree.fxml" fx:id="editorTreePane"/>
+                    <AnchorPane>
+                        <children>
+                           <ScrollPane fx:id="editorContentImageSetOverviewPane" hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <content>
+                                  <fx:include source="editor-content-image-set-overview.fxml"/>
+                              </content>
+                           </ScrollPane>
+                           <ScrollPane fx:id="editorContentImageSetPane" hbarPolicy="NEVER"  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <content>
+                                  <fx:include source="editor-content-image-set.fxml"/>
+                              </content>
+                           </ScrollPane>
+                           <ScrollPane fx:id="editorContentModelOverviewPane" hbarPolicy="NEVER"  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <content>
+                                  <fx:include source="editor-content-model-overview.fxml"/>
+                              </content>
+                           </ScrollPane>
+                           <ScrollPane fx:id="editorContentModelPane" hbarPolicy="NEVER"  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <content>
+                                  <fx:include source="editor-content-model.fxml"/>
+                              </content>
+                           </ScrollPane>
+                        </children>
+                    </AnchorPane>
+                </items>
+            </SplitPane>
+        </children>
+    </VBox>
+</AnchorPane>

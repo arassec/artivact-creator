@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import javafx.scene.control.Tooltip?>
+<AnchorPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.arassec.artivact.creator.ui.controller.ProjectChooserController">
+    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          AnchorPane.topAnchor="0.0">
+        <children>
+            <ToolBar>
+                <items>
+                    <Pane fx:id="spacer"/>
+                    <Button fx:id="newProjectButton" mnemonicParsing="false" onMouseClicked="#newProject" text="%project-chooser.new-project.button.text">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-plus-square" iconSize="16"/>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="%project-chooser.new-project.button.tooltip"/>
+                        </tooltip>
+                    </Button>
+                    <Button fx:id="openProjectButton" mnemonicParsing="false" onMouseClicked="#openProject" text="%project-chooser.open-project.button.text">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-folder-open" iconSize="16"/>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="%project-chooser.open-project.button.tooltip"/>
+                        </tooltip>
+                    </Button>
+                </items>
+            </ToolBar>
+            <ScrollPane fx:id="scrollPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                        AnchorPane.rightAnchor="0.0"
+                        AnchorPane.topAnchor="0.0">
+                <content>
+                    <AnchorPane>
+                        <children>
+                            <VBox fx:id="recentProjectsList" spacing="5.0"/>
+                        </children>
+                    </AnchorPane>
+                </content>
+            </ScrollPane>
+        </children>
+    </VBox>
+</AnchorPane>

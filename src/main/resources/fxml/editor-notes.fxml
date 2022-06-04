@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<AnchorPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.arassec.artivact.creator.ui.controller.EditorNotesController" stylesheets="@../css/application.css">
+    <HBox fx:id="container" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          AnchorPane.topAnchor="0.0" prefHeight="100" maxHeight="100">
+        <children>
+            <StackPane>
+                <padding>
+                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                </padding>
+                <AnchorPane fx:id="imagePane"/>
+            </StackPane>
+            <StackPane>
+                <padding>
+                    <Insets bottom="5.0" right="5.0" top="5.0" />
+                </padding>
+                <VBox>
+                    <children>
+                        <Label text="%editor.notes.header" style="-fx-font-weight: bold;"/>
+                        <TextArea fx:id="notesArea" />
+                    </children>
+                </VBox>
+
+            </StackPane>
+        </children>
+    </HBox>
+</AnchorPane>
