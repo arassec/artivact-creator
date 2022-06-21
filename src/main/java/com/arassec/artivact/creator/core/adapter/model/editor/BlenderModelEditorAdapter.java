@@ -34,7 +34,7 @@ public class BlenderModelEditorAdapter implements ModelEditorAdapter {
             throw new ArtivactCreatorException("Only models can be opened in Blender!");
         }
 
-        var modelPath = Path.of(artivact.getProjectRoot().toString(), asset.getPath());
+        var modelPath =artivact.getProjectRoot().resolve(asset.getPath());
 
         var blenderProjectExists = new AtomicBoolean(false);
         var blenderProjectFile = new StringBuilder();
@@ -46,7 +46,7 @@ public class BlenderModelEditorAdapter implements ModelEditorAdapter {
             cmdLine.addArgument(blenderProjectFile.toString());
         } else {
             cmdLine.addArgument("--python");
-            cmdLine.addArgument(Path.of(artivact.getProjectRoot().resolve(BLENDER_DIR).toString(), "blender-obj-import.py")
+            cmdLine.addArgument(artivact.getProjectRoot().resolve(BLENDER_DIR).resolve("blender-obj-import.py")
                     .toAbsolutePath().toString());
             cmdLine.addArgument("--");
             cmdLine.addArgument(modelPath.toAbsolutePath().toString());

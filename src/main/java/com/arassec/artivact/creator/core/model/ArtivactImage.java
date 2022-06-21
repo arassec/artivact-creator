@@ -20,6 +20,6 @@ public class ArtivactImage extends ArtivactAsset {
         return AssetType.IMAGE;
     }
 
-    private boolean uploadToVault;
+    private boolean export;
 
 }

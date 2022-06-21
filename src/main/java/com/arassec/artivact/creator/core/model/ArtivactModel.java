@@ -20,7 +20,7 @@ public class ArtivactModel extends ArtivactAsset {
 
     private String comment;
 
-    private List<String> vaultUploadFiles = new LinkedList<>();
+    private List<String> exportFiles = new LinkedList<>();
 
     @Override
     public AssetType getType() {

@@ -177,6 +177,36 @@ public class Artivact {
         }
     }
 
+    public void addModel(Path modelFile) {
+        Path modelsDir = getModelsDir(true, id);
+
+        fileHelper.createDirIfRequired(modelsDir);
+
+        int nextAssetNumber = getNextAssetNumber(modelsDir);
+
+        var targetDir = getModelDir(false, id, nextAssetNumber);
+        var targetDirWithProjectRoot = getModelDir(true, id, nextAssetNumber);
+
+        fileHelper.createDirIfRequired(targetDirWithProjectRoot);
+
+        var destination = Paths.get(targetDirWithProjectRoot.toString(), modelFile.getFileName().toString());
+        try {
+            Files.copy(modelFile, destination, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            fileHelper.deleteDir(targetDirWithProjectRoot);
+            throw new ArtivactCreatorException("Could not copy model files!", e);
+        }
+        ArtivactModel artivactModel = ArtivactModel.builder()
+                .number(nextAssetNumber)
+                .path(formatPath(targetDir))
+                .preview(FALLBACK_IMAGE)
+                .comment("import")
+                .exportFiles(new LinkedList<>())
+                .build();
+
+        getModels().add(artivactModel);
+    }
+
     public void createModel(Path sourceDir, String comment) {
         Path modelsDir = getModelsDir(true, id);
 
@@ -218,7 +248,7 @@ public class Artivact {
                 .path(formatPath(targetDir))
                 .preview(FALLBACK_IMAGE)
                 .comment(comment)
-                .vaultUploadFiles(new LinkedList<>())
+                .exportFiles(new LinkedList<>())
                 .build();
 
         getModels().add(artivactModel);
@@ -227,7 +257,7 @@ public class Artivact {
     public void deleteModel(int index) {
         if (models.size() > index) {
             ArtivactModel modelToDelete = getModels().get(index);
-            fileHelper.deleteDir(Path.of(modelToDelete.getPath()));
+            fileHelper.deleteDir(projectRoot.resolve(modelToDelete.getPath()));
             models.remove(index);
         }
     }
@@ -263,6 +293,26 @@ public class Artivact {
         }
     }
 
+    public void deleteArtivactDir(Path rootDir) {
+        fileHelper.deleteDir(rootDir.resolve(getMainDir(false)));
+        var firstSubDir = rootDir.resolve(DATA_DIR).resolve(getSubDir(0, id));
+        var secondSubDir = Path.of(firstSubDir.toString(), getSubDir(1, id));
+        try {
+            try (Stream<Path> stream = Files.list(secondSubDir)) {
+                if (stream.findAny().isEmpty()) {
+                    fileHelper.deleteDir(secondSubDir);
+                }
+            }
+            try (Stream<Path> stream = Files.list(firstSubDir)) {
+                if (stream.findAny().isEmpty()) {
+                    fileHelper.deleteDir(firstSubDir);
+                }
+            }
+        } catch (IOException e) {
+            throw new ArtivactCreatorException("Could not delete all directories for Artivact-ID: " + id);
+        }
+    }
+
     private int getNextAssetNumber(Path dir) {
         var highestNumber = 0;
         try (Stream<Path> stream = Files.list(dir)) {
@@ -288,13 +338,13 @@ public class Artivact {
         return path.toString().replace("\\", "/");
     }
 
-    private Path getAssetDir(boolean includeProjectRoot, String vossilId, String assetSubDir) {
-        var firstSubDir = getSubDir(0, vossilId);
-        var secondSubDir = getSubDir(1, vossilId);
+    private Path getAssetDir(boolean includeProjectRoot, String artivactId, String assetSubDir) {
+        var firstSubDir = getSubDir(0, artivactId);
+        var secondSubDir = getSubDir(1, artivactId);
         if (includeProjectRoot) {
-            return projectRoot.resolve(Path.of(DATA_DIR, firstSubDir, secondSubDir, vossilId, assetSubDir));
+            return projectRoot.resolve(Path.of(DATA_DIR, firstSubDir, secondSubDir, artivactId, assetSubDir));
         }
-        return Path.of(DATA_DIR, firstSubDir, secondSubDir, vossilId, assetSubDir);
+        return Path.of(DATA_DIR, firstSubDir, secondSubDir, artivactId, assetSubDir);
     }
 
     private String getSubDir(int index, String artivactId) {

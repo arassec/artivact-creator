@@ -6,7 +6,7 @@ import com.arassec.artivact.creator.core.model.ArtivactModel;
 import com.arassec.artivact.creator.core.service.ProjectService;
 import com.arassec.artivact.creator.ui.event.EditorEvent;
 import com.arassec.artivact.creator.ui.event.EditorEventType;
-import com.arassec.artivact.creator.ui.model.UploadModelUserData;
+import com.arassec.artivact.creator.ui.model.ExportModelUserData;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.ContextMenu;
@@ -56,18 +56,18 @@ public class EditorContentModelController extends EditorContentBaseController {
     protected void updateContent(int index) {
         modelContentPane.getChildren().clear();
 
-        var toggleUploadMenuItem = new MenuItem(
-                messageSource.getMessage("editor.content.upload.toggle.menu-item", null, Locale.getDefault())
+        var toggleExportMenuItem = new MenuItem(
+                messageSource.getMessage("editor.content.export.toggle.menu-item", null, Locale.getDefault())
         );
-        toggleUploadMenuItem.setOnAction(actionEvent -> {
+        toggleExportMenuItem.setOnAction(actionEvent -> {
             var source = ((MenuItem) actionEvent.getSource());
-            var uploadModelUserData = (UploadModelUserData) source.getUserData();
-            var model = uploadModelUserData.getModel();
+            var exportModelUserData = (ExportModelUserData) source.getUserData();
+            var model = exportModelUserData.getModel();
 
-            if (model.getVaultUploadFiles().contains(uploadModelUserData.getFilename())) {
-                model.getVaultUploadFiles().remove(uploadModelUserData.getFilename());
+            if (model.getExportFiles().contains(exportModelUserData.getFilename())) {
+                model.getExportFiles().remove(exportModelUserData.getFilename());
             } else {
-                model.getVaultUploadFiles().add(uploadModelUserData.getFilename());
+                model.getExportFiles().add(exportModelUserData.getFilename());
             }
 
             projectService.saveArtivact(projectService.getActiveArtivact());
@@ -76,7 +76,7 @@ public class EditorContentModelController extends EditorContentBaseController {
 
         var contextMenu = new ContextMenu();
         contextMenu.setStyle("-fx-selection-bar: lightgrey;");
-        contextMenu.getItems().add(toggleUploadMenuItem);
+        contextMenu.getItems().add(toggleExportMenuItem);
 
         var artivactModel = projectService.getActiveArtivact().getModels().get(index);
         try (var inputStream = Files.list(projectService.getActiveArtivact().getProjectRoot().resolve(artivactModel.getPath()))) {
@@ -84,7 +84,7 @@ public class EditorContentModelController extends EditorContentBaseController {
                 var assetPreviewPane = createPreview(artivactModel, filePath);
 
                 assetPreviewPane.setOnContextMenuRequested(contextMenuEvent -> {
-                    toggleUploadMenuItem.setUserData(new UploadModelUserData(artivactModel, filePath.getFileName().toString()));
+                    toggleExportMenuItem.setUserData(new ExportModelUserData(artivactModel, filePath.getFileName().toString()));
                     contextMenu.show(assetPreviewPane, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
                 });
 
@@ -122,18 +122,18 @@ public class EditorContentModelController extends EditorContentBaseController {
         HBox.setHgrow(detailsSpacer, Priority.ALWAYS);
         horizontalBox.getChildren().add(detailsSpacer);
 
-        var uploadIcon = new FontIcon("fas-upload");
-        uploadIcon.setIconSize(24);
-        HBox.setMargin(uploadIcon, new Insets(5, 5, 0, 0));
-        if (artivactModel.getVaultUploadFiles() != null
-                && artivactModel.getVaultUploadFiles().contains(filePath.getFileName().toString())) {
-            uploadIcon.setIconColor(Paint.valueOf("green"));
-            addTooltip(uploadIcon, "editor.content.upload.true.tooltip");
+        var exportIcon = new FontIcon("fas-file-export");
+        exportIcon.setIconSize(24);
+        HBox.setMargin(exportIcon, new Insets(5, 5, 0, 0));
+        if (artivactModel.getExportFiles() != null
+                && artivactModel.getExportFiles().contains(filePath.getFileName().toString())) {
+            exportIcon.setIconColor(Paint.valueOf("green"));
+            addTooltip(exportIcon, "editor.content.export.true.tooltip");
         } else {
-            uploadIcon.setIconColor(Paint.valueOf("lightgrey"));
-            addTooltip(uploadIcon, "editor.content.upload.false.tooltip");
+            exportIcon.setIconColor(Paint.valueOf("lightgrey"));
+            addTooltip(exportIcon, "editor.content.export.false.tooltip");
         }
-        horizontalBox.getChildren().add(uploadIcon);
+        horizontalBox.getChildren().add(exportIcon);
 
         ((VBox) preview.getChildren().get(0)).getChildren().add(horizontalBox);
 

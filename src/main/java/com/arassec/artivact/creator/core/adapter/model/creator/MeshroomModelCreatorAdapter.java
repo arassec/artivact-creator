@@ -84,7 +84,7 @@ public class MeshroomModelCreatorAdapter implements ModelCreatorAdapter {
 
             var resultHandler = new DefaultExecuteResultHandler();
 
-            progressMonitor.setProgressPrefix(messageSource.getMessage("model-creator-adapter.meshroom.progress.prefix", null, Locale.getDefault()));
+            progressMonitor.setProgress(messageSource.getMessage("model-creator-adapter.meshroom.progress.prefix", null, Locale.getDefault()));
 
             Executor executor = new DaemonExecutor();
             executor.setExitValue(1);

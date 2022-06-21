@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UploadModelUserData {
+public class ExportModelUserData {
 
     private ArtivactModel model;
 

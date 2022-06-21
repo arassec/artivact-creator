@@ -1,5 +1,5 @@
 # Artivact-Creator
-A tool to create and organize virtual artifacts for websites or virtual experiences. 
+A tool to create and organize virtual artifacts for websites or virtual reality experiences. 
 
 It can be used to perform the following tasks:
 - Automatically capture images via camera and artivact-turntable as input for model generation

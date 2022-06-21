@@ -1,6 +1,7 @@
 package com.arassec.artivact.creator.ui.controller;
 
 import com.arassec.artivact.creator.core.model.ArtivactImageSet;
+import com.arassec.artivact.creator.core.service.ExportService;
 import com.arassec.artivact.creator.core.service.ImageService;
 import com.arassec.artivact.creator.core.service.ModelService;
 import com.arassec.artivact.creator.core.service.ProjectService;
@@ -12,6 +13,7 @@ import com.arassec.artivact.creator.ui.event.SceneEvent;
 import com.arassec.artivact.creator.ui.event.SceneEventType;
 import com.arassec.artivact.creator.ui.util.DialogHelper;
 import com.arassec.artivact.creator.ui.util.LongRunningOperation;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -33,6 +35,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
@@ -40,6 +43,9 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -59,11 +65,14 @@ public class EditorController implements ApplicationEventPublisherAware, Applica
 
     private final ModelService modelService;
 
+    private final ExportService exportService;
+
     private final DialogHelper dialogHelper;
 
     private final MessageSource messageSource;
 
-    private final Executor executor = Executors.newSingleThreadExecutor();
+    private final ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<>());
 
     private ApplicationEventPublisher applicationEventPublisher;
 
@@ -119,6 +128,11 @@ public class EditorController implements ApplicationEventPublisherAware, Applica
         editorContentModelPane.setVisible(false);
 
         initialized = true;
+    }
+
+    @PreDestroy
+    public void teardown() {
+        executor.shutdownNow();
     }
 
     @Override
@@ -270,6 +284,20 @@ public class EditorController implements ApplicationEventPublisherAware, Applica
         applicationEventPublisher.publishEvent(new EditorEvent(EditorEventType.UPDATE_EDITOR_TREE, -1));
     }
 
+    public void addModel() {
+        var fileChooser = new FileChooser();
+        fileChooser.setTitle(messageSource.getMessage("editor.dialog.add-model.title", null, Locale.getDefault()));
+        fileChooser.setInitialDirectory(
+                new File(System.getProperty("user.home"))
+        );
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("glb", "glb"));
+        var file = fileChooser.showOpenDialog(editorTreePane.getScene().getWindow());
+
+        projectService.getActiveArtivact().addModel(file.toPath());
+        projectService.saveArtivact(projectService.getActiveArtivact());
+        applicationEventPublisher.publishEvent(new EditorEvent(EditorEventType.UPDATE_EDITOR_TREE, -1));
+    }
+
     public void createModel() {
         ChoiceDialog<String> pipelineDialog = new ChoiceDialog<>(modelService.getDefaultPipeline(), modelService.getPipelines());
         pipelineDialog.initModality(Modality.APPLICATION_MODAL);
@@ -355,8 +383,16 @@ public class EditorController implements ApplicationEventPublisherAware, Applica
         return messageSource.getMessage("general.cancelled", null, Locale.getDefault());
     }
 
-    public void upload() {
-        log.debug("Not implemented at the moment!");
+    public void export() {
+        var progressMonitor = new ProgressMonitor("Exporting - ");
+        executor.execute(new LongRunningOperation(editorTreePane.getScene().getWindow(), progressMonitor,
+                () -> {
+                    exportService.export(projectService.getActiveArtivact(), progressMonitor);
+                    return messageSource.getMessage(I18N_OK, null, Locale.getDefault());
+                },
+                () -> messageSource.getMessage(I18N_DONE, null, Locale.getDefault()),
+                null, applicationEventPublisher, null
+        ));
     }
 
 }

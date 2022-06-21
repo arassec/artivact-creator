@@ -40,26 +40,26 @@ public class EditorContentImageSetController extends EditorContentBaseController
     protected void updateContent(int imageSetIndex) {
         imageSetContentPane.getChildren().clear();
 
-        var toggleUploadMenuItem = new MenuItem(
-                messageSource.getMessage("editor.content.upload.toggle.menu-item", null, Locale.getDefault())
+        var toggleExportMenuItem = new MenuItem(
+                messageSource.getMessage("editor.content.export.toggle.menu-item", null, Locale.getDefault())
         );
-        toggleUploadMenuItem.setOnAction(actionEvent -> {
+        toggleExportMenuItem.setOnAction(actionEvent -> {
             var source = ((MenuItem) actionEvent.getSource());
             var artivactImage = (ArtivactImage) source.getUserData();
-            artivactImage.setUploadToVault(!artivactImage.isUploadToVault());
+            artivactImage.setExport(!artivactImage.isExport());
             projectService.saveArtivact(projectService.getActiveArtivact());
             updateContent(imageSetIndex);
         });
 
         var contextMenu = new ContextMenu();
         contextMenu.setStyle("-fx-selection-bar: lightgrey;");
-        contextMenu.getItems().add(toggleUploadMenuItem);
+        contextMenu.getItems().add(toggleExportMenuItem);
 
         projectService.getActiveArtivact().getImageSets().get(imageSetIndex).getImages().forEach(asset -> {
             var assetPreviewPane = createPreview(asset);
 
             assetPreviewPane.setOnContextMenuRequested(contextMenuEvent -> {
-                toggleUploadMenuItem.setUserData(asset);
+                toggleExportMenuItem.setUserData(asset);
                 contextMenu.show(assetPreviewPane, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());
             });
 
@@ -80,17 +80,17 @@ public class EditorContentImageSetController extends EditorContentBaseController
         HBox.setHgrow(detailsSpacer, Priority.ALWAYS);
         horizontalBox.getChildren().add(detailsSpacer);
 
-        var uploadIcon = new FontIcon("fas-upload");
-        uploadIcon.setIconSize(24);
-        HBox.setMargin(uploadIcon, new Insets(5, 5, 0, 0));
-        if (!artivactImage.isUploadToVault()) {
-            uploadIcon.setIconColor(Paint.valueOf("lightgrey"));
-            addTooltip(uploadIcon, "editor.content.upload.false.tooltip");
+        var exportIcon = new FontIcon("fas-file-export");
+        exportIcon.setIconSize(24);
+        HBox.setMargin(exportIcon, new Insets(5, 5, 0, 0));
+        if (!artivactImage.isExport()) {
+            exportIcon.setIconColor(Paint.valueOf("lightgrey"));
+            addTooltip(exportIcon, "editor.content.export.false.tooltip");
         } else {
-            uploadIcon.setIconColor(Paint.valueOf("green"));
-            addTooltip(uploadIcon, "editor.content.upload.true.tooltip");
+            exportIcon.setIconColor(Paint.valueOf("green"));
+            addTooltip(exportIcon, "editor.content.export.true.tooltip");
         }
-        horizontalBox.getChildren().add(uploadIcon);
+        horizontalBox.getChildren().add(exportIcon);
 
         ((VBox) preview.getChildren().get(0)).getChildren().add(horizontalBox);
 

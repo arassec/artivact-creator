@@ -1,11 +1,9 @@
 package com.arassec.artivact.creator.core.util;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
 
 @Data
-@RequiredArgsConstructor
 public class ProgressMonitor {
 
     private String progressPrefix;
@@ -13,6 +11,13 @@ public class ProgressMonitor {
     private String progress = "Starting";
 
     private boolean cancelled;
+
+    public ProgressMonitor() {
+    }
+
+    public ProgressMonitor(String progressPrefix) {
+        this.progressPrefix = progressPrefix;
+    }
 
     public void updateProgress(String progress) {
         if (StringUtils.hasText(progressPrefix)) {

@@ -121,23 +121,22 @@ public class ProjectService {
     }
 
     public void deleteArtivact(Artivact artivact) {
-        var artivactDir = artivact.getMainDir(true);
-        fileHelper.deleteDir(artivactDir);
+        artivact.deleteArtivactDir(activeProject.getRootDir());
     }
 
     public List<String> getArtivactIds() {
         List<String> result = new LinkedList<>();
-        findVossilIdsRecursively(activeProject.getDataDir(), result);
+        findArtivactIdsRecursively(activeProject.getDataDir(), result);
         return result;
     }
 
-    private void findVossilIdsRecursively(Path root, List<String> target) {
+    private void findArtivactIdsRecursively(Path root, List<String> target) {
         try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(root)) {
             directoryStream.forEach(path -> {
                 if (path.getFileName().toString().endsWith(ARTIVACT_FILE_SUFFIX)) {
                     target.add(path.getFileName().toString().replace(ARTIVACT_FILE_SUFFIX, ""));
                 } else if (Files.isDirectory(path)) {
-                    findVossilIdsRecursively(path, target);
+                    findArtivactIdsRecursively(path, target);
                 }
             });
         } catch (IOException e) {

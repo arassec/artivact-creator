@@ -44,7 +44,15 @@
                         </tooltip>
                     </Button>
                     <Separator/>
-                    <Button fx:id="createModelButton" mnemonicParsing="false" onAction="#createModel" text="%editor.toolbar.create-model.button.text">
+                    <Button mnemonicParsing="false" onAction="#addModel" text="%editor.toolbar.add-model.button.text">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-file-import" iconSize="16"/>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="%editor.toolbar.add-model.button.tooltip"/>
+                        </tooltip>
+                    </Button>
+                    <Button mnemonicParsing="false" onAction="#createModel" text="%editor.toolbar.create-model.button.text">
                         <graphic>
                             <FontIcon iconLiteral="fas-cube" iconSize="16"/>
                         </graphic>
@@ -53,12 +61,12 @@
                         </tooltip>
                     </Button>
                     <Pane fx:id="spacer"/>
-                    <Button fx:id="uploadButton" mnemonicParsing="false" onAction="#upload" text="%editor.toolbar.upload-files.button.text">
+                    <Button mnemonicParsing="false" onAction="#export" text="%editor.toolbar.export.button.text">
                         <graphic>
-                            <FontIcon iconLiteral="fas-upload" iconSize="16"/>
+                            <FontIcon iconLiteral="fas-file-export" iconSize="16"/>
                         </graphic>
                         <tooltip>
-                            <Tooltip text="%editor.toolbar.upload-files.button.tooltip"/>
+                            <Tooltip text="%editor.toolbar.export.button.tooltip"/>
                         </tooltip>
                     </Button>
                 </items>

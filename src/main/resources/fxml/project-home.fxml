@@ -19,7 +19,8 @@
         <children>
             <ToolBar>
                 <items>
-                    <Button mnemonicParsing="false" onAction="#closeProject" text="%project-home.toolbar.close-project.button.text">
+                    <Button mnemonicParsing="false" onAction="#closeProject"
+                            text="%project-home.toolbar.close-project.button.text">
                         <graphic>
                             <FontIcon iconLiteral="fas-eject" iconSize="16"/>
                         </graphic>
@@ -28,7 +29,8 @@
                         </tooltip>
                     </Button>
                     <Separator/>
-                    <Button mnemonicParsing="false" onAction="#addArtivact" text="%project-home.toolbar.add-artivact.button.text">
+                    <Button mnemonicParsing="false" onAction="#addArtivact"
+                            text="%project-home.toolbar.add-artivact.button.text">
                         <graphic>
                             <FontIcon iconLiteral="fas-plus" iconSize="16"/>
                         </graphic>
@@ -37,7 +39,8 @@
                         </tooltip>
                     </Button>
                     <Pane fx:id="spacer"/>
-                    <Button mnemonicParsing="false" onAction="#createModels" text="%project-home.toolbar.create-models.button.text">
+                    <Button mnemonicParsing="false" onAction="#createModels"
+                            text="%project-home.toolbar.create-models.button.text">
                         <graphic>
                             <FontIcon iconLiteral="fas-cubes" iconSize="16"/>
                         </graphic>
@@ -45,14 +48,25 @@
                             <Tooltip text="%project-home.toolbar.create-models.button.tooltip"/>
                         </tooltip>
                     </Button>
+                    <Separator/>
+                    <Button mnemonicParsing="false" onAction="#export" text="%project-home.toolbar.export.button.text">
+                        <graphic>
+                            <FontIcon iconLiteral="fas-file-export" iconSize="16"/>
+                        </graphic>
+                        <tooltip>
+                            <Tooltip text="%project-home.toolbar.export.button.tooltip"/>
+                        </tooltip>
+                    </Button>
                 </items>
             </ToolBar>
             <ScrollPane fx:id="artivactsTableContainer" fitToHeight="true" fitToWidth="true"
-                        AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                        AnchorPane.topAnchor="0.0">
                 <content>
                     <TableView items="${controller.artivactSummaries}" fx:id="artivactsTable">
                         <columns>
-                            <TableColumn text="%project-home.artivacts-table.column.preview" resizable="false" maxWidth="58" minWidth="58"
+                            <TableColumn text="%project-home.artivacts-table.column.preview" resizable="false"
+                                         maxWidth="58" minWidth="58"
                                          style="-fx-alignment: CENTER">
                                 <cellValueFactory>
                                     <PropertyValueFactory property="previewImage"/>
@@ -63,22 +77,26 @@
                                     <PropertyValueFactory property="notes"/>
                                 </cellValueFactory>
                             </TableColumn>
-                            <TableColumn text="%project-home.artivacts-table.column.images-available" style="-fx-alignment: CENTER">
+                            <TableColumn text="%project-home.artivacts-table.column.images-available"
+                                         style="-fx-alignment: CENTER">
                                 <cellValueFactory>
                                     <PropertyValueFactory property="imagesAvailable"/>
                                 </cellValueFactory>
                             </TableColumn>
-                            <TableColumn text="%project-home.artivacts-table.column.models-available" style="-fx-alignment: CENTER">
+                            <TableColumn text="%project-home.artivacts-table.column.models-available"
+                                         style="-fx-alignment: CENTER">
                                 <cellValueFactory>
                                     <PropertyValueFactory property="modelsAvailable"/>
                                 </cellValueFactory>
                             </TableColumn>
-                            <TableColumn text="%project-home.artivacts-table.column.models-edited" style="-fx-alignment: CENTER">
+                            <TableColumn text="%project-home.artivacts-table.column.models-edited"
+                                         style="-fx-alignment: CENTER">
                                 <cellValueFactory>
                                     <PropertyValueFactory property="modelsEdited"/>
                                 </cellValueFactory>
                             </TableColumn>
-                            <TableColumn text="%project-home.artivacts-table.column.models-exported" style="-fx-alignment: CENTER">
+                            <TableColumn text="%project-home.artivacts-table.column.models-exported"
+                                         style="-fx-alignment: CENTER">
                                 <cellValueFactory>
                                     <PropertyValueFactory property="modelsExported"/>
                                 </cellValueFactory>

@@ -2,6 +2,7 @@ package com.arassec.artivact.creator.ui.controller;
 
 import com.arassec.artivact.creator.core.model.Artivact;
 import com.arassec.artivact.creator.core.model.ArtivactCreatorException;
+import com.arassec.artivact.creator.core.service.ExportService;
 import com.arassec.artivact.creator.core.service.ModelService;
 import com.arassec.artivact.creator.core.service.ProjectService;
 import com.arassec.artivact.creator.core.util.ProgressMonitor;
@@ -14,12 +15,15 @@ import com.arassec.artivact.creator.ui.util.ImageUtil;
 import com.arassec.artivact.creator.ui.util.LongRunningOperation;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Control;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -37,12 +41,14 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -57,9 +63,14 @@ public class ProjectHomeController implements ApplicationEventPublisherAware {
 
     private final ModelService modelService;
 
+    private final ExportService exportService;
+
     private final MessageSource messageSource;
 
     private final DialogHelper dialogHelper;
+
+    private final ThreadPoolExecutor executor = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<>());
 
     @Getter
     private final ObservableList<ArtivactSummary> artivactSummaries = FXCollections.observableArrayList();
@@ -86,12 +97,19 @@ public class ProjectHomeController implements ApplicationEventPublisherAware {
                 + "-fx-faint-focus-color: transparent;"
                 + "-fx-selection-bar: lightgrey;"
                 + "-fx-selection-bar-non-focused: none;"
-                + "-fx-border: none;"
+                 + "-fx-border: none;"
         );
+
+        artivactsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         VBox.setVgrow(artivactsTable, Priority.ALWAYS);
 
         reloadSummaryPage();
+    }
+
+    @PreDestroy
+    public void teardown() {
+        executor.shutdownNow();
     }
 
     @Override
@@ -119,9 +137,6 @@ public class ProjectHomeController implements ApplicationEventPublisherAware {
         if (artivactsWithoutModels.isEmpty()) {
             return;
         }
-
-        var executor = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<>());
 
         var progressMonitor = new ProgressMonitor();
         for (Artivact artivact : artivactsWithoutModels) {
@@ -267,4 +282,18 @@ public class ProjectHomeController implements ApplicationEventPublisherAware {
         return Optional.empty();
     }
 
+    public void export() {
+        var progressMonitor = new ProgressMonitor("Exporting - ");
+        executor.execute(new LongRunningOperation(artivactsTable.getScene().getWindow(), progressMonitor,
+                () -> {
+                    projectService.getArtivactIds().forEach(artivactId -> {
+                        progressMonitor.setProgressPrefix("Exporting " + artivactId + " - ");
+                        exportService.export(projectService.readArtivact(artivactId), progressMonitor);
+                    });
+                    return messageSource.getMessage("general.ok", null, Locale.getDefault());
+                },
+                () -> messageSource.getMessage("general.done", null, Locale.getDefault()),
+                null, applicationEventPublisher, null
+        ));
+    }
 }
